@@ -6,7 +6,7 @@ can be extended to calculate system time responses.
 
 
 ## Program1.m
-***Description-*** Plots the responses of subjecting a spirng-mass-damper system to an initial velocity excitation.
+***Description-*** Plots the responses of subjecting a mass-spring-damper system to an initial velocity excitation.
 
 ![Matlabresponse](https://github.com/user-attachments/assets/6b92d5fb-2e67-4b16-8e87-c176e3fdb89a)
 
@@ -16,4 +16,4 @@ can be extended to calculate system time responses.
 ![3graphresponse](https://github.com/user-attachments/assets/0533ce37-3a32-4c77-a0e3-28fe77c11549)
 
 ## Program3.m
-***Description-*** 
+***Description-*** For a FORCED vibration of a mass-spring-damper system, we can calculate the amplitude of the forced response given the system parameters m, c, k and the system's overall response equation. The system's response is different than the forced response because the system's response only describes the harmonic motion of the system over time. This script solves for the force amplitude.
