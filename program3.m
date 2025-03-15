@@ -2,7 +2,7 @@
 % spring-mass-damper system. In linear systems, the frequency of a system's
 % response is exaclty equal to the frequency of the excitation. 
 
-% in this problem, the given force response is y(t) = 0.002cos(40t).
+% in this problem, the given system response is y(t) = 0.002cos(40t).
 % Therefore, w = 40 rad/s
 
 %In other words: The system's response equation is given y(t) = 0.002*cos(40*t) which describe the system's motion due to the external force.
