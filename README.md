@@ -17,3 +17,6 @@ can be extended to calculate system time responses.
 
 ## Program3.m
 ***Description-*** For a FORCED vibration of a mass-spring-damper system, we can calculate the amplitude of the forced response given the system parameters m, c, k and the system's overall response equation. The system's response is different than the forced response because the system's response only describes the harmonic motion of the system over time. This script solves for the force amplitude.
+
+![force_and_sys](https://github.com/user-attachments/assets/46f79bc9-7885-4552-b82e-5aa2bdf69cfa)
+
