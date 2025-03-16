@@ -38,6 +38,11 @@ end
 
 subplot(2,1,1);
 plot(t,y);
+title('General Motion Response of System');
+xlabel('Time');
+ylabel('Vertical Displacement');
 subplot(2,1,2);
 plot(t,f_);
-
+title('Force Response of the System');
+xlabel('Time');
+ylabel('Force[N]');
