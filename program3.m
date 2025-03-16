@@ -28,3 +28,16 @@ Z = C/(2*sqrt(K*M));
 F_o = Y*K*(sqrt((1-r^2)^2 + (2*Z*r)^2));
 disp(F_o);
 disp(w);
+
+% Plotting
+for i=1:101,
+    t(i) = 6* i/100;
+    y(i) = Y*cos(40*t(i));
+    f_(i) = F_o*cos(40*t(i));
+end
+
+subplot(2,1,1);
+plot(t,y);
+subplot(2,1,2);
+plot(t,f_);
+
