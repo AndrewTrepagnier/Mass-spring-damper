@@ -20,3 +20,5 @@ can be extended to calculate system time responses.
 
 ![force_and_sys](https://github.com/user-attachments/assets/46f79bc9-7885-4552-b82e-5aa2bdf69cfa)
 
+## quickcopy.py
+***Description-***A simple, non-class script for performing the exact same task as system_response.py. I did this to practice programs faster writing faster and simpler
