@@ -70,23 +70,23 @@ class system():
 
         if self.case == 'Not Damped':
             self.C_value = 0  # C = 0
-            self.Z = 0        # ζ = 0
+            self.Z = 0        # Z = 0
             self.wd = self.wn # For undamped, wd = wn
             
         elif self.case == 'Critically Damped':
             self.C_value = 2*np.sqrt(K*M)  # C = 2√(km)
-            self.Z = 1                      # ζ = 1
+            self.Z = 1                      # Z = 1
             self.wd = 0  # No oscillation
             
         elif self.case == 'Over Damped':
             self.C_value = 3*np.sqrt(K*M)  # Set C > 2√(km), let's use 3√(km)
-            self.Z = self.C_value/(2*np.sqrt(K*M))  # This will give ζ > 1
-            self.wd = self.wn*np.sqrt(1- self.Z**2 )
+            self.Z = self.C_value/(2*np.sqrt(K*M))  # This will give Z > 1
+            self.wd = self.wn*np.sqrt(1 - self.Z**2 )
             
         elif self.case == "Underdamped":
             self.C_value = np.sqrt(K*M)  # Set C < 2√(km), let's use √(km)
-            self.Z = self.C_value/(2*np.sqrt(K*M))  # This will give ζ < 1
-            self.wd = self.wn*np.sqrt(1 - self.Z**2)
+            self.Z = self.C_value/(2*np.sqrt(K*M))  # This will give Z < 1
+            self.wd = self.wn*np.sqrt(1 - self.Z**2 )
 
         print(f"C value: {self.C_value}, Damping ratio: {self.Z}")
     
