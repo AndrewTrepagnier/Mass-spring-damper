@@ -22,3 +22,36 @@ can be extended to calculate system time responses.
 
 ## quickcopy.py
 ***Description-***A simple, non-class script for performing the exact same task as system_response.py. I did this to practice programs faster writing faster and simpler
+
+
+## system_identifier.py
+
+***Description-*** The Holy Grail of Mechanical Vibration Systems. This program is designed to take in any transfer and input function and tell you every characteristic of it(steady state response, error at steady state, percent overshoot, and more).
+
+
+### Example 1: First Order System
+
+System Analysis:
+--------------------------------------------------
+Transfer Function: G(s) = (1.00)/(1.00s + 2.00)
+Input: u(t) = 4 (step input)
+--------------------------------------------------
+Time Constant (τ): 0.50 seconds
+Steady State Response (yss): 2.00
+Steady State Error (ess): 2.00
+--------------------------------------------------
+
+### Example 2: Second Order System
+
+System Analysis:
+--------------------------------------------------
+Transfer Function: G(s) = (25.00)/(1.00s^2 + 4.00s + 25.00)
+Input: u(t) = 1 (step input)
+--------------------------------------------------
+Natural Frequency (ωn): 5.00 rad/s
+Damping Ratio (ζ): 0.40
+Steady State Response (yss): 1.00
+Steady State Error (ess): 0.00
+--------------------------------------------------
+
+![Figure_1](https://github.com/user-attachments/assets/171fe5cb-48db-4c1a-bbe2-593f5e42276c)
