@@ -68,7 +68,8 @@ class ParameterCalculation:
         self.tau = 1 / self.den_coeff[1]
         K = self.num_coeff[0] / self.den_coeff[1]
         self.ss_response = K * self.input
-        self.ss_error = self.input - self.ss_response
+        #self.ss_error = self.input - self.ss_response
+        self.ss_error = self.input*(1-K)
     
     def _calculate_second_order(self):
         """Calculate second order system parameters."""
@@ -81,6 +82,7 @@ class ParameterCalculation:
         self.PO = 100 * np.exp(-self.zeta * np.pi / np.sqrt(1 - self.zeta**2))  # Percent overshoot
         
         # Settling times
+        self.Ts_0 = 5 / (self.zeta * self.wn)  # 1% settling time
         self.Ts_1 = 4 / (self.zeta * self.wn)  # 2% settling time
         self.Ts_2 = 3 / (self.zeta * self.wn)  # 5% settling time
         self.Ts_3 = 2 / (self.zeta * self.wn)  # 10% settling time
@@ -88,8 +90,11 @@ class ParameterCalculation:
         # Steady state calculations
         K = self.num_coeff[0] / self.den_coeff[2]  # DC gain
         self.ss_response = K * self.input
-        self.ss_error = self.input - self.ss_response
+        self.ss_error = self.input*(1-K)
     
+
+
+
     def plot_response(self, t_final=10):
         """Generate basic time response plot."""
         sys = ct.TransferFunction(self.num_coeff, self.den_coeff)
@@ -117,11 +122,16 @@ class ParameterCalculation:
             print(f"Peak Time (Tp): {self.Tp:.2f} sec")
             print(f"Percent Overshoot: {self.PO:.1f}%")
             print(f"Settling Times:")
+            print(f"  1%: {self.Ts_0:.2f} sec")
             print(f"  2%: {self.Ts_1:.2f} sec")
             print(f"  5%: {self.Ts_2:.2f} sec")
             print(f" 10%: {self.Ts_3:.2f} sec")
         print(f"Steady State Response: {self.ss_response:.2f}")
         print(f"Steady State Error: {self.ss_error:.2f}")
+
+
+
+
 
 def analyze_transfer_function(numerator_coeffs: list, denominator_coeffs: list, input_amplitude: float = 1.0, t_final: float = 10):
     """
@@ -163,6 +173,8 @@ def analyze_transfer_function(numerator_coeffs: list, denominator_coeffs: list, 
     print(f"Steady State Response (yss): {params.ss_response:.2f}")
     print(f"Steady State Error (ess): {params.ss_error:.2f}")
     print("-" * 50)
+    params.print_parameters()
+    print("-" * 50)
     
     # Plot response
     params.plot_response(t_final)
@@ -197,6 +209,10 @@ if __name__ == "__main__":
     # Example 2: G(s) = 25/(s² + 4s + 25)
     print("\nExample 2: Second Order System")
     analyze_transfer_function([25], [1, 4, 25], input_amplitude=1)
+
+    # Example 3: G(s) = 400/(2s² + 4s + 100)
+    print("\nExample 3(Problem 2): Second Order System")
+    analyze_transfer_function([400], [2, 4, 100], input_amplitude=2)
     
     # You can easily analyze any other transfer function by calling:
     # analyze_transfer_function([num_coeffs], [den_coeffs], input_amplitude)
