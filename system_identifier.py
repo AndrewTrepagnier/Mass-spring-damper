@@ -92,25 +92,40 @@ class ParameterCalculation:
         self.ss_response = K * self.input
         self.ss_error = self.input*(1-K)
     
-
-
-
-    def plot_response(self, t_final=10):
+    def plot_response(self, show=True):
         """Generate basic time response plot."""
         sys = ct.TransferFunction(self.num_coeff, self.den_coeff)
-        t = np.linspace(0, t_final, 1000)
+        t = np.linspace(0, 10, 1000)
         u = np.ones_like(t) * self.input
         _, y = ct.forced_response(sys, t, u)
         
-        plt.figure(figsize=(10, 6))
-        plt.plot(t, u, 'b-', label='Input')
-        plt.plot(t, y, 'r--', label='Output')
+        plt.plot(t, u, 'b-', label='Input: u(t)')
+        plt.plot(t, y, 'r--', label='Output: y(t)')
         plt.grid(True)
         plt.xlabel('Time (sec)')
-        plt.ylabel('Amplitude')
+        plt.ylabel('Amplitude (y)')
         plt.legend()
-        plt.show()
-    
+        if show:
+            plt.show()
+
+    def pole_plot(self, show=True):
+        """Plot pole-zero map."""
+        sys = ct.TransferFunction(self.num_coeff, self.den_coeff)
+        ct.pzmap(sys, plot=True, grid=True)
+        plt.grid(True)
+        if show:
+            plt.show()
+
+    def step_plot(self, show=True):
+        """Plot step response."""
+        sys = ct.TransferFunction(self.num_coeff, self.den_coeff)
+        t = np.linspace(0, 3, 1000)
+        t, y = ct.step_response(sys, t)
+        plt.plot(t, y)
+        plt.grid(True)
+        if show:
+            plt.show()
+
     def print_parameters(self):
         """Print system parameters."""
         print("\nSystem Parameters:")
@@ -147,6 +162,8 @@ def analyze_transfer_function(numerator_coeffs: list, denominator_coeffs: list, 
         input_amplitude (float): Amplitude of the step input
         t_final (float): Final time for simulation
     """
+
+
     # Convert lists to numpy arrays
     num = np.array(numerator_coeffs)
     den = np.array(denominator_coeffs)
@@ -166,7 +183,7 @@ def analyze_transfer_function(numerator_coeffs: list, denominator_coeffs: list, 
     
     if system.order == 1:
         print(f"Time Constant (τ): {params.tau:.2f} seconds")
-    else:  # second order
+    else: # second order
         print(f"Natural Frequency (ωn): {params.wn:.2f} rad/s")
         print(f"Damping Ratio (ζ): {params.zeta:.2f}")
     
@@ -176,8 +193,14 @@ def analyze_transfer_function(numerator_coeffs: list, denominator_coeffs: list, 
     params.print_parameters()
     print("-" * 50)
     
+
+
     # Plot response
     params.plot_response(t_final)
+    params.pole_plot()
+
+
+
 
 def format_transfer_function(num: np.ndarray, den: np.ndarray) -> str:
     """Format transfer function coefficients into a readable string."""
@@ -200,20 +223,209 @@ def format_transfer_function(num: np.ndarray, den: np.ndarray) -> str:
     
     return f"({num_str})/({den_str})"
 
+
+
+
+
 # Example usage
 if __name__ == "__main__":
-    # Example 1: G(s) = 1/(s+2)
-    print("\nExample 1: First Order System")
+    # Problem 1: G(s) = 1/(s+2)
+    print("\nProblem 1: First Order System")
     analyze_transfer_function([1], [1, 2], input_amplitude=4)
+    print("-"*50)
     
-    # Example 2: G(s) = 25/(s² + 4s + 25)
-    print("\nExample 2: Second Order System")
-    analyze_transfer_function([25], [1, 4, 25], input_amplitude=1)
+    # Problem 2: 
+    print("\nProblem 2: Second Order System")
+    analyze_transfer_function([49], [1, 7.392, 49], input_amplitude=10)
+    print("-"*50)
+    """---------------------------------------------------------------------------------------- Part A """
+    # Problem 4a - Different damping ratios
+    print("\nProblem 4a - Different damping ratios:")
+    
+    # Create systems
+    sys1 = ParameterCalculation(np.array([100]), np.array([1, 4, 100]), 2, 1)  # ζ = 0.2
+    sys2 = ParameterCalculation(np.array([100]), np.array([1, 8, 100]), 2, 1)  # ζ = 0.4
+    sys3 = ParameterCalculation(np.array([100]), np.array([1, 12, 100]), 2, 1) # ζ = 0.6
+    
+    # Plot poles
+    plt.figure(figsize=(10, 6))
+    plt.title("Problem 4a: Pole Locations for Different Damping Ratios")
+    sys1.pole_plot(show=False)
+    sys2.pole_plot(show=False)
+    sys3.pole_plot(show=False)
+    plt.legend(['Pole ζ = 0.2', 'Pole ζ = 0.4', 'Pole ζ = 0.6'])
+    plt.xlabel('Real')
+    plt.ylabel('Imaginary')
+    plt.show()
+    
+    # Plot step responses
+    plt.figure(figsize=(10, 6))
+    plt.title("Problem 4a: Step Responses for Different Damping Ratios")
+    sys1.step_plot(show=False)
+    sys2.step_plot(show=False)
+    sys3.step_plot(show=False)
+    plt.legend(['Step Response(ζ = 0.2)', 'Step Response(ζ = 0.4)', 'Step Response(ζ = 0.6)'])
+    plt.xlabel('Time (sec)')
+    plt.ylabel('Amplitude')
+    plt.show()
+    
+    # # Plot system responses
+    # plt.figure(figsize=(10, 6))
+    # plt.title("Problem 4a: System Responses for Different Damping Ratios")
+    # sys1.plot_response(show=False)
+    # sys2.plot_response(show=False)
+    # sys3.plot_response(show=False)
+    # plt.legend(['ζ = 0.2', 'ζ = 0.4', 'ζ = 0.6'])
+    # plt.show()
+    
+    # Print parameters for each system
+    print("\nParameters for ζ = 0.2:")
+    sys1.print_parameters()
+    print("\nParameters for ζ = 0.4:")
+    sys2.print_parameters()
+    print("\nParameters for ζ = 0.6:")
+    sys3.print_parameters()
 
-    # Example 3: G(s) = 400/(2s² + 4s + 100)
-    print("\nExample 3(Problem 2): Second Order System")
-    analyze_transfer_function([400], [2, 4, 100], input_amplitude=2)
+    print("Discussion:\n As Zeta increases and Wn remains constant, the settling times and percent overshoots decrease. Alternatively, peak time increases during this. ")
     
-    # You can easily analyze any other transfer function by calling:
-    # analyze_transfer_function([num_coeffs], [den_coeffs], input_amplitude)
+    """---------------------------------------------------------------------------------------- Part B"""
+    # Problem 4b - Different natural frequencies (constant zeta)
+    print("\nProblem 4b - Different natural frequencies (ζ = 0.3):")
+    
+    # Create systems with constant zeta = 0.3
+    sys1 = ParameterCalculation(np.array([100]), np.array([1, 6, 100]), 2, 1)     # ωn = 10
+    sys2 = ParameterCalculation(np.array([400]), np.array([1, 12, 400]), 2, 1)    # ωn = 20
+    sys3 = ParameterCalculation(np.array([900]), np.array([1, 18, 900]), 2, 1)    # ωn = 30
+    
+    # Plot poles
+    plt.figure(figsize=(10, 6))
+    plt.title("Problem 4b: Pole Locations for Different Natural Frequencies (ζ = 0.3)")
+    sys1.pole_plot(show=False)
+    sys2.pole_plot(show=False)
+    sys3.pole_plot(show=False)
+    plt.legend(['Pole ωn = 10', 'Pole ωn = 20', 'Pole ωn = 30'])
+    plt.xlabel('Real')
+    plt.ylabel('Imaginary')
+    plt.show()
+    
+    # Plot step responses
+    plt.figure(figsize=(10, 6))
+    plt.title("Problem 4b: Step Responses for Different Natural Frequencies (ζ = 0.3)")
+    sys1.step_plot(show=False)
+    sys2.step_plot(show=False)
+    sys3.step_plot(show=False)
+    plt.legend(['Step Response(ωn = 10)', 'Step Response(ωn = 20)', 'Step Response(ωn = 30)'])
+    plt.xlabel('Time (sec)')
+    plt.ylabel('Amplitude')
+    plt.show()
+    
+    # Print parameters for each system
+    print("\nParameters for ωn = 10:")
+    sys1.print_parameters()
+    print("\nParameters for ωn = 20:")
+    sys2.print_parameters()
+    print("\nParameters for ωn = 30:")
+    sys3.print_parameters()
+
+    print("Discussion:\n As Natural Frequency increases and Zeta remains constant at 0.3, the settling times and peak times decrease. The percent overshoot remains constant since it only depends on Zeta.")
+    
+    """---------------------------------------------------------------------------------------- Part C"""
+    # Problem 4c - Different ζωn values with constant ωd
+    print("\nProblem 4c - Different ζωn values (ωd = 40):")
+    
+    # For ωd = 40, we need to calculate ωn and ζ for each ζωn value
+    # Using ωd = ωn√(1-ζ²) = 40 and ζωn = {10, 20, 30}
+    
+    # For ζωn = 10: solve ωd = ωn√(1-(10/ωn)²) = 40
+    # For ζωn = 20: solve ωd = ωn√(1-(20/ωn)²) = 40
+    # For ζωn = 30: solve ωd = ωn√(1-(30/ωn)²) = 40
+    
+    # Calculated values:
+    # ζωn = 10: ωn ≈ 41.23, ζ ≈ 0.243
+    # ζωn = 20: ωn ≈ 44.72, ζ ≈ 0.447
+    # ζωn = 30: ωn ≈ 50.00, ζ ≈ 0.600
+    
+    sys1 = ParameterCalculation(np.array([1700]), np.array([1, 20, 1700]), 2, 1)    # ζωn = 10
+    sys2 = ParameterCalculation(np.array([2000]), np.array([1, 40, 2000]), 2, 1)    # ζωn = 20
+    sys3 = ParameterCalculation(np.array([2500]), np.array([1, 60, 2500]), 2, 1)    # ζωn = 30
+    
+    # Plot poles
+    plt.figure(figsize=(10, 6))
+    plt.title("Problem 4c: Pole Locations for Different ζωn Values (ωd = 40)")
+    sys1.pole_plot(show=False)
+    sys2.pole_plot(show=False)
+    sys3.pole_plot(show=False)
+    plt.legend(['Pole ζωn = 10', 'Pole ζωn = 20', 'Pole ζωn = 30'])
+    plt.xlabel('Real')
+    plt.ylabel('Imaginary')
+    plt.show()
+    
+    # Plot step responses
+    plt.figure(figsize=(10, 6))
+    plt.title("Problem 4c: Step Responses for Different ζωn Values (ωd = 40)")
+    sys1.step_plot(show=False)
+    sys2.step_plot(show=False)
+    sys3.step_plot(show=False)
+    plt.legend(['Step Response(ζωn = 10)', 'Step Response(ζωn = 20)', 'Step Response(ζωn = 30)'])
+    plt.xlabel('Time (sec)')
+    plt.ylabel('Amplitude')
+    plt.show()
+    
+    # Print parameters for each system
+    print("\nParameters for Zwn = 10:")
+    sys1.print_parameters()
+    print("\nParameters for Zwn = 20:")
+    sys2.print_parameters()
+    print("\nParameters for Zwn = 30:")
+    sys3.print_parameters()
+
+    print("Discussion:\n As Zwn increases with constant wd, both the settling time and percent overshoot decrease due to increased damping. The peak time increases as the system becomes more damped.")
+    
+    """---------------------------------------------------------------------------------------- Part D"""
+    # Problem 4d - Different ωd values with constant ζωn
+    print("\nProblem 4d - Different ωd values (Zwn = 10):")
+    
+    # For ζωn = 10 constant, we calculate systems for ωd = {20, 30, 40}
+    # Using ωd = ωn√(1-ζ²) and ζωn = 10
+    
+    # Calculated values for ωd = 20, 30, 40:
+    # ωd = 20: ωn ≈ 22.36, ζ ≈ 0.447
+    # ωd = 30: ωn ≈ 31.62, ζ ≈ 0.316
+    # ωd = 40: ωn ≈ 41.23, ζ ≈ 0.243
+    
+    sys1 = ParameterCalculation(np.array([500]), np.array([1, 20, 500]), 2, 1)     # ωd = 20
+    sys2 = ParameterCalculation(np.array([1000]), np.array([1, 20, 1000]), 2, 1)   # ωd = 30
+    sys3 = ParameterCalculation(np.array([1700]), np.array([1, 20, 1700]), 2, 1)   # ωd = 40
+    
+    # Plot poles
+    plt.figure(figsize=(10, 6))
+    plt.title("Problem 4d: Pole Locations for Different wd Values (Zwn = 10)")
+    sys1.pole_plot(show=False)
+    sys2.pole_plot(show=False)
+    sys3.pole_plot(show=False)
+    plt.legend(['Pole wd = 20', 'Pole wd = 30', 'Pole wd = 40'])
+    plt.xlabel('Real')
+    plt.ylabel('Imaginary')
+    plt.show()
+    
+    # Plot step responses
+    plt.figure(figsize=(10, 6))
+    plt.title("Problem 4d: Step Responses for Different wd Values (Zwn = 10)")
+    sys1.step_plot(show=False)
+    sys2.step_plot(show=False)
+    sys3.step_plot(show=False)
+    plt.legend(['Step Response(wd = 20)', 'Step Response(wd = 30)', 'Step Response(wd = 40)'])
+    plt.xlabel('Time (sec)')
+    plt.ylabel('Amplitude')
+    plt.show()
+    
+    # Print parameters for each system
+    print("\nParameters for wd = 20:")
+    sys1.print_parameters()
+    print("\nParameters for wd = 30:")
+    sys2.print_parameters()
+    print("\nParameters for wd = 40:")
+    sys3.print_parameters()
+
+    print("Discussion:\n As wd increases with constant Zwn, the settling time decreases and the system responds faster. The percent overshoot increases slightly as the damping ratio effectively decreases relative to the natural frequency.")
     
