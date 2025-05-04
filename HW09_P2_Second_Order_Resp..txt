@@ -1,0 +1,34 @@
+from scipy.signal import step, TransferFunction, lsim
+
+# Time vector
+t = np.linspace(0, 5, 1000)
+
+# Define system G(s) = 400 / (2s^2 + 4s + 100)
+num = [400]
+den = [2, 4, 100]
+system = TransferFunction(num, den)
+
+# Step input u(t) = 2
+u = 2 * np.ones_like(t)
+
+# Compute the output response
+t_out, y, _ = lsim(system, U=u, T=t)
+
+# Estimate key values manually or using your own functions
+y_ss = 2 * (400 / 100)  # dcgain = 4, y_ss = 8
+e_ss = 2 - y_ss         # should be negative here (overshoot case)
+
+# Plot
+plt.figure(figsize=(8, 5))
+plt.plot(t, u, 'r--', label='u(t)')
+plt.plot(t_out, y, 'b-', label='y(t)')
+plt.axhline(y_ss, color='g', linestyle='--', label='y_ss')
+plt.axhline(e_ss, color='m', linestyle='--', label='e_ss')
+
+plt.xlabel('time (sec)')
+plt.ylabel('y(t)')
+plt.title('Second-Order System Response')
+plt.legend()
+plt.grid(True)
+plt.tight_layout()
+plt.show()

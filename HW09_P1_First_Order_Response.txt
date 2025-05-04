@@ -1,0 +1,39 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.signal import TransferFunction, lsim
+
+# Time vector
+t = np.linspace(0, 10, 1000)
+
+# Define system G(s) = 1 / (s + 2)
+num = [1]
+den = [1, 2]
+system = TransferFunction(num, den)
+
+# Step input u(t) = 4
+u = 4 * np.ones_like(t)
+
+# Compute the output response
+t_out, y, _ = lsim(system, U=u, T=t)
+
+# Theoretical values
+tau = 1 / 2
+y_ss = 4 * (1 / 2)  # dcgain = 1/2
+e_ss = 4 - y_ss
+t_6tau = 6 * tau
+
+# Plot
+plt.figure(figsize=(8, 5))
+plt.plot(t, u, 'r--', label='u(t)')
+plt.plot(t_out, y, 'b-', label='y(t)')
+plt.axhline(y_ss, color='g', linestyle='--', label='y_ss')
+plt.axhline(e_ss, color='m', linestyle='--', label='e_ss')
+plt.axvline(t_6tau, color='k', linestyle='--', label='6τ')
+
+plt.xlabel('time (sec)')
+plt.ylabel('y(t)')
+plt.title('First-Order System Response')
+plt.legend()
+plt.grid(True)
+plt.tight_layout()
+plt.show()
